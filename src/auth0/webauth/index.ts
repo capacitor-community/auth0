@@ -99,6 +99,7 @@ export default class WebAuth {
           return agent
             .show(authorizeUrl, options.ephemeralSession)
             .then((redirectUrl: any) => {
+              console.warn('ss', redirectUrl);
               if (!redirectUrl || !redirectUrl.startsWith(redirectUri)) {
                 throw new AuthError({
                   json: {

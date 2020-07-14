@@ -36,7 +36,7 @@
     "dist/",
     "ios/",
     "android/",
-    "Auth0.podspec"
+    "CapacitorCommunityAuth0.podspec"
   ],
   "keywords": [
     "capacitor",

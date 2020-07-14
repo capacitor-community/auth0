@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.browser.customtabs.CustomTabsIntent;
 
@@ -18,6 +20,7 @@ import com.getcapacitor.PluginMethod;
 public class Auth0 extends Plugin {
 
     private static final int CANCEL_EVENT_DELAY = 100;
+    private final int CHROME_CUSTOM_TAB_REQUEST_CODE = 100;
 
     private Context applicationContext;
     private boolean mCustomTabsOpened = false; // TODO: Improve
@@ -32,34 +35,15 @@ public class Auth0 extends Plugin {
     }
 
     @Override
-    protected void handleOnStart() {
-        super.handleOnStart();
-
-        Intent intent = getBridge().getActivity().getIntent();
-
-    }
-
-    @Override
     protected void handleOnResume() {
-        super.handleOnResume();
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 PluginCall call = getSavedCall();
-
                 Intent intent = getBridge().getActivity().getIntent();
+                String action = intent.getAction();
 
-                if (call != null) {
-                    if (mCustomTabsOpened) {
-                        mCustomTabsOpened = false;
-
-                        final JSObject success = new JSObject();
-                        call.success(success);
-                        freeSavedCall();
-                        return;
-                    }
-
+                if (call != null && mCustomTabsOpened && (action != null && !action.equals("android.intent.action.VIEW"))) {
                     final JSObject error = new JSObject();
                     error.put("error", "a0.session.user_cancelled");
                     error.put("error_description", "User cancelled the Auth");
